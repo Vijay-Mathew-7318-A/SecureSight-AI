@@ -31,3 +31,10 @@ All (scanner not yet built).
 
 ## Known Issues
 None reported.
+
+## - Phase 2: Backend development (config, URL validator, schemas, routes, error handlers done; scan endpoints come after the scanner exists)
+
+- Settings: `app/core/config.py` -> `get_settings()`
+- URL safety: `app/core/url_validator.py` -> `validate_target_url()` raises `UnsafeURLError`; allowed ports 80/443/8080/8443; every resolved IP must be public
+- API: `app/api/schemas.py` (Pydantic models), `app/api/routes.py` (router with prefix `/api`: GET /health, POST /validate-url)
+- Errors: `UnsafeURLError` -> HTTP 400 `{"detail": "..."}`; unexpected errors -> HTTP 500 generic message (details only in server log)
