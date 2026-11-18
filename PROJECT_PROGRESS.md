@@ -39,7 +39,7 @@ None reported.
 - API: `app/api/schemas.py` (Pydantic models), `app/api/routes.py` (router with prefix `/api`: GET /health, POST /validate-url)
 - Errors: `UnsafeURLError` -> HTTP 400 `{"detail": "..."}`; unexpected errors -> HTTP 500 generic message (details only in server log)
 
-## - [~] Phase 3: Security scanning engine (3.1 models + HTTP client, 3.2 HTTPS/TLS, 3.3 security headers done; cookies, extra OWASP checks, engine pending)
+## [~] Phase 3: Security scanning engine (3.1 models + client, 3.2 HTTPS/TLS, 3.3 headers, 3.4 cookies, 3.5 HTML content done; CORS/well-known files, engine, scan endpoint pending)
 
 - OWASP edition: 2025 (SSRF merged into A01). Names live in `OWASP_TOP_10` in `app/scanner/models.py`; verify A05-A08 names at owasp.org/Top10/2025
 - Scanner data: `Finding`, `ScanResult`, `Severity` in `app/scanner/models.py`
@@ -63,3 +63,15 @@ A01, A02, A03, A05, A06, A07, A08, A09, A10 (A04 only partly: no cipher/protocol
   (single page only; simplified CSP review; HSTS skipped when final page is HTTP; page-level checks skipped for non-HTML responses)
 
   A02 partly covered (headers only; cookies, CORS, error pages, default files pending), A04 partly covered (no cipher/protocol/revocation checks). Not covered: A01, A03, A05, A06, A07, A08, A09, A10
+
+  - Cookie security (A02:2025): Secure, HttpOnly, SameSite, SameSite=None without Secure, __Host-/__Secure- prefix rules; severity depends on whether the cookie NAME looks session-related; cookie values are never stored
+  (only cookies set during page load; no login is performed; hop that set the cookie is not recorded)
+
+  - HTML page content (single page, first ~1 MB, no JavaScript execution):
+  mixed content active/passive (A04), scripts/styles from other hosts without SRI (A08), password field on HTTP page, form posting to HTTP, password form using GET (A04/A02), directory listing (A02), exposed error details/stack traces/debug pages (A10), generator version disclosure (A02), library versions in file names (A03, disclosure only - NOT checked against a vulnerability database)
+
+  A02 partly (headers, cookies, some page content; CORS, security.txt, default files pending), A03 minimal (version disclosure only, no vulnerability lookup), A04 partly (no cipher/protocol/revocation checks), A08 minimal (SRI only), A10 minimal (error-message patterns on the fetched page only). Not covered: A01, A05, A06, A07, A09
+
+  
+
+
