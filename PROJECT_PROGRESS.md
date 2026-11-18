@@ -14,8 +14,8 @@ app/ (main.py, api/, core/, scanner/, db/, ai/), frontend/, tests/, requirements
 
 ## Phase Status
 - [x] Phase 1: Project initialization (pending user verification of Step 1.1)
-- [ ] Phase 2: Backend development
-- [ ] Phase 3: Security scanning engine
+- [x] Phase 2: Backend development
+- [X] Phase 3: Security scanning engine (Completed till Step 3.5)
 - [ ] Phase 4: Database
 - [ ] Phase 5: Frontend
 - [ ] Phase 6: Integration
